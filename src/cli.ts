@@ -5,9 +5,10 @@ import { randomUUID } from "node:crypto";
 import { setMaxListeners } from "node:events";
 import { buildPipeline } from "./graph/buildGraph.js";
 
-// LangGraph's guarded tool loop attaches many AbortSignal listeners per run.
-// Raise the limit to suppress the Node.js "memory leak" warning.
-setMaxListeners(50);
+// LangGraph's guarded tool loop attaches one AbortSignal listener per LLM/tool
+// call. Large schedules (29+ beams × multiple zooms) exceed Node's default of 10.
+// 0 = unlimited — this is intentional, not an actual memory leak.
+setMaxListeners(0);
 
 
 /**
