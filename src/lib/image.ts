@@ -33,16 +33,21 @@ export async function cropImageB64(
   if (x2 <= x1) x2 = Math.min(1, x1 + 0.05);
   if (y2 <= y1) y2 = Math.min(1, y1 + 0.05);
 
-  const left = Math.floor(x1 * w);
-  const top = Math.floor(y1 * h);
-  const right = Math.max(Math.floor(x2 * w), left + 20);
-  const bottom = Math.max(Math.floor(y2 * h), top + 20);
+  // Pixel coords — ensure left/top are strictly inside the image
+  const left   = Math.min(Math.floor(x1 * w), w - 1);
+  const top    = Math.min(Math.floor(y1 * h), h - 1);
+  const right  = Math.min(Math.ceil(x2 * w),  w);
+  const bottom = Math.min(Math.ceil(y2 * h),  h);
+
+  // Guarantee at least 1px in each dimension so sharp never gets width=0
+  const cropW = Math.max(right  - left, 1);
+  const cropH = Math.max(bottom - top,  1);
 
   let cropped = sharp(await img.extract({
     left,
     top,
-    width: Math.min(right, w) - left,
-    height: Math.min(bottom, h) - top,
+    width:  Math.min(cropW, w - left),   // never overflow the image edge
+    height: Math.min(cropH, h - top),
   }).toBuffer());
 
   const meta = await cropped.metadata();

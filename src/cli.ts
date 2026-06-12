@@ -2,7 +2,13 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import pLimit from "p-limit";
 import { randomUUID } from "node:crypto";
+import { setMaxListeners } from "node:events";
 import { buildPipeline } from "./graph/buildGraph.js";
+
+// LangGraph's guarded tool loop attaches many AbortSignal listeners per run.
+// Raise the limit to suppress the Node.js "memory leak" warning.
+setMaxListeners(50);
+
 
 /**
  * Usage:

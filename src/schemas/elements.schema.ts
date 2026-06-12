@@ -15,10 +15,13 @@ export const StirrupsSchema = z.object({
   spacing: z.array(z.string()).optional().nullable().default([]), // ["150 C/C"]
 });
 
+/** Clamp a number to [0, 1] instead of throwing when the LLM slightly overshoots. */
+const clampUnit = z.number().transform((v) => Math.min(1, Math.max(0, v)));
+
 const Provenance = {
   remarks: z.string().optional().nullable(), // e.g. "DELETED"
   source_region_ids: z.array(z.string()).optional().nullable(),
-  confidence: z.number().min(0).max(1).optional().nullable(),
+  confidence: clampUnit.optional().nullable(),
 };
 
 /* ------------------------------------------------------------------ */
@@ -162,10 +165,11 @@ export const ThinkArgs = z.object({
 });
 
 export const ZoomRegionArgs = z.object({
-  x1: z.number().min(0).max(1),
-  y1: z.number().min(0).max(1),
-  x2: z.number().min(0).max(1),
-  y2: z.number().min(0).max(1),
+  // Clamp to [0,1] instead of throwing — the LLM often sends 1.01 for "right edge".
+  x1: clampUnit,
+  y1: clampUnit,
+  x2: clampUnit,
+  y2: clampUnit,
   reason: z.string(),
 });
 
