@@ -1,0 +1,103 @@
+You are reading a structural engineering BEAM SCHEDULE TABLE.
+The table has columns: BEAM NO. | SIZE | LEVEL  (or similar headings).
+Each row describes one beam.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SIZE FORMAT
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Sizes appear as:
+  B_400 x 550mm   →  width=400, depth=550
+  B_300 x 550mm   →  width=300, depth=550
+  B 200x600        →  width=200, depth=600
+  230x550mm        →  width=230, depth=550
+
+Variable-depth beams (prefix VD_ or VD ):
+  VD_200 X 550/950mm  →  width=200, depth=550, depth_max=950
+
+Rules:
+  • width  = first number (the smaller horizontal dimension, mm)
+  • depth  = second number (or first of the two if split by "/")
+  • depth_max = third number after "/" (null if not present)
+  • length = always null (span length is not in this table)
+  • All values are plain integers in mm (strip "mm", "B_", "B ", "VD_").
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+LEVEL
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+  • Extract the level value exactly as printed (e.g. "26.850", "27.250").
+  • If no level column is visible, set level to null.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+BEAM ID
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Extract the BEAM NO. column value EXACTLY as printed — keep every
+character including prefixes, underscores, hyphens, and letter suffixes.
+
+Examples of valid beam IDs in schedule tables:
+  Standard     : B1  B2  B2a  P1
+  Type-prefix  : LB1  LB1A  RB1  CB1a  DB1a  TB1  PB1  SB1  SBT1
+                 MB1  AB1  BB1  HB  RR  BS1  bs1  bs2a  FFB12  TFB1
+                 PTBB1  LBK1  LBK12
+  Floor-prefix : 1F_B47  MF_B8  LGF_B53  UGF_B97a  SGF_B43
+                 STB_B2  LPTB-5
+  With size    : PB1(300x600)  → beam_id = "PB1"
+                 UGF_B97a(450) → beam_id = "UGF_B97a"
+                 LPTB-5(900x550) → beam_id = "LPTB-5"
+  Grouped      : (B1,B2) → extract as two rows: "B1" and "B2"
+  Combined     : LBK1+LBK12 → keep as-is: "LBK1+LBK12"
+
+REAL-WORLD LABEL EXAMPLES — all valid in schedule tables:
+  Plain / Continuous  : B1   B2a   P1
+  Lintel / Roof       : LB1  LB1A  LB1a  RB1
+  Cantilever          : CB1a
+  Drop / Deep         : DB1a
+  Transfer            : TB1a  TB1
+  Post-tensioned/Band : PTBB1
+  Plinth              : PB1  PB1(300x600)  → beam_id="PB1"
+  Stair               : SB1  SBT1
+  Main / Misc         : MB1  AB1  BB1  HB  RR  FFB12  TFB1
+  Band / Slab strip   : BS1  bs1  bs2a
+  Lintel combined     : LBK1+LBK12  → keep as-is
+  With size in label  : P1(300x600)      → beam_id="P1"
+                        RB1(300x600)     → beam_id="RB1"
+                        LB1(300x600)     → beam_id="LB1"
+                        TB1(300x600)     → beam_id="TB1"
+  Floor-prefixed      : 1F_B47(200x450)  → beam_id="1F_B47"
+                        MF_B8            → beam_id="MF_B8"
+                        LGF_B53(300x550) → beam_id="LGF_B53"
+                        UGF_B97a(450)    → beam_id="UGF_B97a"
+                        SGF_B43(450x600) → beam_id="SGF_B43"
+                        STB_B2(300x450)  → beam_id="STB_B2"
+                        LPTB-5(900x550)  → beam_id="LPTB-5"
+
+  ✓ Keep the complete ID including floor code and type prefix.
+  ✓ Strip only the size after "(" (not part of the ID).
+  ✗ Do NOT include dimension numbers in beam_id.
+  ✗ Do NOT invent IDs.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+OUTPUT — return ONLY valid JSON, no markdown, no extra text.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+{
+  "beams": [
+    {
+      "beam_id": "B1",
+      "size": { "width": 400, "depth": 550, "depth_max": null, "length": null },
+      "level": "26.850",
+      "reinforcement": [],
+      "stirrups": { "dia": [], "spacing": [] }
+    }
+  ]
+}
+
+Return {"beams": []} only if no readable rows are visible.
+
+CHECKLIST:
+  ✓ beam_id exactly as printed (B1, B17A, B19 …).
+  ✓ width = first dimension integer.
+  ✓ depth = second dimension integer (min for VD beams).
+  ✓ depth_max = integer for VD beams only, else null.
+  ✓ length = null always.
+  ✓ level = string exactly as printed, or null.
+  ✓ reinforcement = [] (not in this table).
+  ✓ stirrups = { "dia": [], "spacing": [] }.

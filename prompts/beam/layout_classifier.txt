@@ -1,0 +1,40 @@
+You are examining a structural engineering drawing sheet containing beam
+detail drawings.
+
+Look at the OVERALL ARRANGEMENT of the beam cross-section rectangles on
+this page and choose exactly ONE word — no explanation, no punctuation:
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+CHOOSE:  stripe   grid   table
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+stripe  →  Beam details are arranged in HORIZONTAL ROWS across the
+           drawing area. Each row may contain 1–4 beam details of
+           VARYING WIDTHS side by side. There may be a notes column,
+           title block, or legend on the RIGHT SIDE — that is fine,
+           ignore it when judging the layout. Choose "stripe" whenever
+           the beam drawings are stacked row-by-row vertically.
+
+           VISUAL CUE: rows of beam outlines stacked top-to-bottom,
+           beams in the same row may be different widths.
+
+grid    →  Beam details fill a REGULAR MATRIX: every cell is
+           approximately the same size, arranged in EQUAL-WIDTH COLUMNS
+           AND EQUAL-HEIGHT ROWS. The beam drawings form a tight,
+           uniform table-like grid across the FULL PAGE WIDTH with no
+           large empty or notes column on the side.
+
+           VISUAL CUE: like a spreadsheet of equal-sized cells,
+           all beams roughly the same width.
+
+table   →  The page shows a SCHEDULE TABLE — rows and columns of TEXT
+           listing beam numbers, sizes (400x550mm), and floor levels.
+           There are NO cross-section rectangles or bar drawings.
+           Typical header: "BEAM NO." | "SIZE" | "LEVEL".
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+KEY TIE-BREAKER: if you are unsure between stripe and grid,
+choose STRIPE — it is safer because stripes span the full width.
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Reply with exactly one word: stripe   or   grid   or   table

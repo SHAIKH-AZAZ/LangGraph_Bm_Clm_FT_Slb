@@ -1,0 +1,35 @@
+{
+  "name": "slab-extraction-agent",
+  "version": "1.0.0",
+  "description": "RCC slab schedule extraction \u2014 LangGraph.js multi-agent pipeline",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/api/server.ts",
+    "start": "node dist/api/server.js",
+    "cli": "tsx src/cli.ts",
+    "build": "tsc",
+    "lint": "eslint src --ext .ts"
+  },
+  "dependencies": {
+    "@langchain/core": "^0.3.40",
+    "@langchain/langgraph": "^0.2.50",
+    "@langchain/openai": "^0.4.5",
+    "@fastify/multipart": "^9.0.0",
+    "fastify": "^5.2.0",
+    "zod": "^3.24.0",
+    "sharp": "^0.33.5",
+    "pdf-to-png-converter": "^3.6.0",
+    "ioredis": "^5.4.0",
+    "pino": "^9.5.0",
+    "p-limit": "^6.1.0",
+    "uuid": "^11.0.0",
+    "dotenv": "^16.4.0",
+    "@qdrant/js-client-rest": "^1.13.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.10.0",
+    "eslint": "^9.17.0"
+  }
+}

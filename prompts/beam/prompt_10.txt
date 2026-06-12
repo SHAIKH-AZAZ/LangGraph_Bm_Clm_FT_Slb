@@ -1,0 +1,112 @@
+You are an expert in extracting RCC beam schedule tables.
+
+Extract ALL rows from the image.
+
+The table has columns:
+- BEAM NO.
+- SIZE
+- LEVEL
+
+=========================
+OUTPUT FORMAT (STRICT)
+=========================
+
+{
+  "beams": [
+    {
+      "beam_id": "",
+      "size": {
+        "width": null,
+        "depth": null,
+        "length": null
+      },
+      "reinforcement": [],
+      "stirrups": {
+        "dia": [],
+        "spacing": []
+      }
+    }
+  ]
+}
+
+=========================
+RULES
+=========================
+
+1. Extract EVERY row in the table (top to bottom)
+2. Do NOT skip any beam
+3. Do NOT stop early
+
+-------------------------
+BEAM ID
+-------------------------
+- Extract exactly as written
+=========================
+BEAM ID EXAMPLES
+=========================
+
+Beam labels appear in many formats. Extract beam_id EXACTLY as written — do NOT modify, normalize, or rename.
+
+Examples of valid beam labels:
+
+  Simple:            B1, B2, B3, B2a, B3a
+  Prefix variants:   RB1, LB1, TB1, PB1, MB1, SB1, CB1a, DB1a, DB1
+                     AB1, BB1, HB, FFB12, TFB1, RR
+  Plinth beams:      PB1, PTBB1
+  Lintel beams:      LB1A, LB1, LBK1, LBK12
+  Stair beams:       SB1, SBT1
+  Floor-prefixed:    1F_B47, MF_B8, LGF_B53, UGF_B97a, SGF_B43, STB_B2
+  Hyphen format:     LPTB-5, bs1, bs2a
+  Size in label:     PB1 (300x600), RB1 (300x600), P1 (300x600),
+                     1F_B47(200x450), LGF_B53(300x550), UGF_B97a(450),
+                     SGF_B43(450x600), STB_B2(300x450), LPTB-5(900x550)
+  Combined labels:   LBK1+LBK12
+  Grouped beams:     (B1,B2), B6,B7,B8,B9,B10
+
+CRITICAL RULES:
+1. Extract beam_id EXACTLY as visible — preserve case, numbers, hyphens,
+   underscores, brackets, and letter suffixes (a, b, A, B).
+2. If size appears inside the label (e.g. "PB1 (300x600)"), keep the
+   full label as beam_id.
+3. If multiple beams are grouped in one cell (e.g. "(B1,B2)" or
+   "B6,B7,B8"), keep them as ONE string — do NOT split.
+4. Do NOT strip, shorten, abbreviate, or guess any part of the beam_id.
+
+
+
+-------------------------
+SIZE
+-------------------------
+
+Examples:
+B_300 x 800mm  
+BAND_B_1800 x 550mm  
+
+Rules:
+- Extract only numbers
+- width = first number  (B dimension = breadth/width)
+- depth = second number (D dimension = depth)
+- ignore text like B_, BAND_B_, VD_, mm
+- If size contains "/" (e.g. 550/950mm), use the larger number as depth
+
+-------------------------
+REINFORCEMENT & STIRRUPS
+-------------------------
+
+- Not present → return empty
+
+-------------------------
+FINAL CHECK
+-------------------------
+
+- Ensure last row is included
+- Ensure multiple beams are extracted
+- Output must NOT be empty
+
+=========================
+IMPORTANT
+=========================
+
+Return ONLY JSON  
+No explanation  
+No markdown  
