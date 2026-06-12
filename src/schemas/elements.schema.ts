@@ -11,14 +11,14 @@ export const SizeSchema = z.object({
 });
 
 export const StirrupsSchema = z.object({
-  dia: z.array(z.string()).default([]),      // ["T8"]
-  spacing: z.array(z.string()).default([]),  // ["150 C/C"]
+  dia: z.array(z.string()).optional().nullable().default([]), // ["T8"]
+  spacing: z.array(z.string()).optional().nullable().default([]), // ["150 C/C"]
 });
 
 const Provenance = {
-  remarks: z.string().optional(),                    // e.g. "DELETED"
-  source_region_ids: z.array(z.string()).optional(),
-  confidence: z.number().min(0).max(1).optional(),
+  remarks: z.string().optional().nullable(), // e.g. "DELETED"
+  source_region_ids: z.array(z.string()).optional().nullable(),
+  confidence: z.number().min(0).max(1).optional().nullable(),
 };
 
 /* ------------------------------------------------------------------ */
@@ -32,11 +32,11 @@ export const NosSchema = z.object({
 });
 
 export const BeamSchema = z.object({
-  beam_id: z.string(),                       // grouped IDs kept as written
-  size: SizeSchema,                          // "200 x 600" -> w200 d600 l:null
-  reinforcement: z.array(z.string()).default([]), // normalized "2-T16"
+  beam_id: z.string(), // grouped IDs kept as written
+  size: SizeSchema, // "200 x 600" -> w200 d600 l:null
+  reinforcement: z.array(z.string()).optional().nullable().default([]), // normalized "2-T16"
   stirrups: StirrupsSchema,
-  nos: NosSchema.nullable().optional(),      // grid-layout stirrup zones only
+  nos: NosSchema.nullable().optional(), // grid-layout stirrup zones only
   ...Provenance,
 });
 
@@ -45,10 +45,10 @@ export const BeamSchema = z.object({
 /* ------------------------------------------------------------------ */
 
 export const ColumnSchema = z.object({
-  column_no: z.string(),                     // "C1" or "C1,C7,C8"
-  column_name: z.string().default(""),       // level/floor label, verbatim
+  column_no: z.string(), // "C1" or "C1,C7,C8"
+  column_name: z.string().optional().nullable().default(""), // level/floor label, verbatim
   size: SizeSchema,
-  reinforcement: z.array(z.string()).default([]),
+  reinforcement: z.array(z.string()).optional().nullable().default([]),
   stirrups: StirrupsSchema,
   mix: z.string().nullable().default(null),
   steel_grade: z.string().nullable().default(null),
@@ -62,11 +62,11 @@ export const ColumnSchema = z.object({
 export const SlabSchema = z.object({
   slab_id: z.string(),
   thickness: z.number().nullable(),
-  type: z.string().default(""),
-  mix: z.string().default(""),
+  type: z.string().optional().nullable().default(""),
+  mix: z.string().optional().nullable().default(""),
   reinforcement: z.object({
-    dia: z.array(z.string()).default([]),
-    spacing: z.array(z.string()).default([]),
+    dia: z.array(z.string()).optional().nullable().default([]),
+    spacing: z.array(z.string()).optional().nullable().default([]),
   }),
   ...Provenance,
 });
@@ -76,12 +76,12 @@ export const SlabSchema = z.object({
 /* ------------------------------------------------------------------ */
 
 const SpanReinf = z.object({
-  dia: z.string().nullable(),                // "16"
-  spacing: z.string().nullable(),            // "130 C/C"
+  dia: z.string().nullable(), // "16"
+  spacing: z.string().nullable(), // "130 C/C"
 });
 
 export const FootingSchema = z.object({
-  footing_id: z.string(),                    // "F1"
+  footing_id: z.string(), // "F1"
   column_id: z.string().nullable().default(null), // "C1,C18"
   size: SizeSchema,
   reinforcement: z.object({
@@ -105,8 +105,8 @@ export const CombinedResultSchema = z.object({
   footings: z.array(FootingSchema).default([]),
   global_context: z
     .object({
-      mix: z.string().nullable(),            // M25 from general notes
-      steel_grade: z.string().nullable(),    // FE500 from general notes
+      mix: z.string().nullable(), // M25 from general notes
+      steel_grade: z.string().nullable(), // FE500 from general notes
     })
     .partial()
     .optional(),
@@ -180,8 +180,8 @@ export const ConfirmReadArgs = z.object({
 
 export const TraceEventSchema = z.object({
   ts: z.number(),
-  element: z.string().optional(),
-  page: z.number().optional(),
+  element: z.string().optional().nullable(),
+  page: z.number().optional().nullable(),
   tool: z.string(),
   args: z.unknown(),
   result: z.unknown(),
